@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-    "start": "nodemon -w src --ext ts --exec ts-node src/index.ts",
+  "scripts": {    
+    "dev": "nodemon -w src --ext ts --exec ts-node src/index.ts",
+    "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,6 +13,7 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.23.0",
+    "class-validator": "^0.13.1",
     "graphql": "^15.5.0",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
