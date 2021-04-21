@@ -3,12 +3,14 @@ import { createConnection } from "typeorm";
 import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/user.resolver";
+import { MessageResolver } from "./resolvers/message.resolver";
+import { ThreadResolver } from "./resolvers/thread.resolver";
 
 async function main() {
   await createConnection();
 
   const schema = await buildSchema({
-    resolvers: [UserResolver],
+    resolvers: [UserResolver, MessageResolver, ThreadResolver],
     dateScalarMode: "timestamp",
   });
 

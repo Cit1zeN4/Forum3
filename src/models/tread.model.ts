@@ -1,4 +1,4 @@
-import { Field, ID, ObjectType } from "type-graphql";
+import { Field, ID, Int, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -28,20 +28,20 @@ export class Thread extends BaseEntity {
   @Column({ nullable: true })
   description: string;
 
-  @Field((type) => User)
-  @ManyToOne(() => User, (user) => user.threads)
+  @Field((type) => User, { nullable: true })
+  @ManyToOne(() => User, (user) => user.threads, { nullable: true })
   author: User;
 
-  @Field((type) => Thread)
-  @ManyToOne(() => Thread, (thread) => thread.subThreads)
-  parentTread: Thread;
+  @Field((type) => Thread, { nullable: true })
+  @ManyToOne(() => Thread, (thread) => thread.subThreads, { nullable: true })
+  parentTread?: Thread;
 
-  @Field((type) => [Thread])
-  @OneToMany(() => Thread, (thread) => thread.parentTread)
+  @Field((type) => [Thread], { nullable: true })
+  @OneToMany(() => Thread, (thread) => thread.parentTread, { nullable: true })
   subThreads: Thread[];
 
-  @Field((type) => [Message])
-  @OneToMany(() => Message, (message) => message.thread)
+  @Field((type) => [Message], { nullable: true })
+  @OneToMany(() => Message, (message) => message.thread, { nullable: true })
   messages: Message[];
 
   @Field((type) => Boolean)
