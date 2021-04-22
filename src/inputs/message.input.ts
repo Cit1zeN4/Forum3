@@ -20,7 +20,7 @@ export class AddMessageInput {
 }
 
 @InputType()
-export class editMessageInput {
+export class EditMessageInput {
   @Field((type) => String, { nullable: true })
   text: string;
 

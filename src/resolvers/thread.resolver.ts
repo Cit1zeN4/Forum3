@@ -13,18 +13,29 @@ export class ThreadResolver {
 
   @Query((returns) => [Thread])
   async threadsWithRelations(@Args() { skip, take }: PaginationArgs) {
-    return await Thread.find({
+    const result = await Thread.find({
       skip,
       take,
-      relations: ["messages", "subThreads"],
+      relations: ["messages", "messages.author", "subThreads", "parentTread"],
       order: { title: "ASC" },
     });
+
+    return result;
   }
 
   @Query((returns) => Int)
   async threadCount() {
     const result = await Thread.find();
     return result.length;
+  }
+
+  @Query((returns) => Thread)
+  async threadWithRelation(@Arg("id") id: string) {
+    const thread = await Thread.findOne(id, {
+      relations: ["messages", "messages.author", "subThreads", "author"],
+    });
+    if (!thread) throw new Error(`Can't find thread with id:${id}`);
+    return thread;
   }
 
   @Mutation((returns) => Thread)
