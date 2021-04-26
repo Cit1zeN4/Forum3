@@ -1,7 +1,7 @@
 import { Arg, Args, Int, Mutation, Query, Resolver } from "type-graphql";
 import { PaginationArgs } from "../inputs/common.args";
 import { AddThreadInput } from "../inputs/thread.input";
-import { Thread } from "../models/tread.model";
+import { Thread } from "../models/thread.model";
 import { User } from "../models/user.model";
 
 @Resolver(Thread)
@@ -18,6 +18,9 @@ export class ThreadResolver {
       take,
       relations: ["messages", "messages.author", "subThreads", "parentTread"],
       order: { title: "ASC" },
+      where: {
+        parentTread: null,
+      },
     });
 
     return result;
@@ -25,7 +28,7 @@ export class ThreadResolver {
 
   @Query((returns) => Int)
   async threadCount() {
-    const result = await Thread.find();
+    const result = await Thread.find({ where: { parentTread: null } });
     return result.length;
   }
 
