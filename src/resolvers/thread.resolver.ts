@@ -1,9 +1,21 @@
-import { Arg, Args, Int, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Args,
+  Int,
+  Mutation,
+  PubSub,
+  PubSubEngine,
+  Query,
+  Resolver,
+  Root,
+  Subscription,
+} from "type-graphql";
 import { PaginationArgs } from "../inputs/common.args";
 import { AddThreadInput } from "../inputs/thread.input";
 import { Thread } from "../models/thread.model";
 import { User } from "../models/user.model";
 
+const NEW_THREAD = "NEW_THREAD";
 @Resolver(Thread)
 export class ThreadResolver {
   @Query((returns) => [Thread])
@@ -42,11 +54,23 @@ export class ThreadResolver {
   }
 
   @Mutation((returns) => Thread)
-  async addThread(@Arg("data") data: AddThreadInput) {
+  async addThread(
+    @PubSub() pubSub: PubSubEngine,
+    @Arg("data") data: AddThreadInput
+  ) {
     const thread = Thread.create(data);
     if (data.authorId) thread.author = await User.findOneOrFail(data.authorId);
     if (data.parentThreadId)
       thread.parentTread = await Thread.findOneOrFail(data.parentThreadId);
-    return await thread.save();
+    const result = await thread.save();
+    await pubSub.publish(NEW_THREAD, result);
+    return result;
+  }
+
+  @Subscription((returns) => Thread, {
+    topics: NEW_THREAD,
+  })
+  newThread(@Root() thread: Thread) {
+    return thread;
   }
 }
