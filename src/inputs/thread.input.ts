@@ -1,6 +1,6 @@
 import { Field, ID, InputType } from "type-graphql";
 import { Message } from "../models/message.model";
-import { Thread } from "../models/tread.model";
+import { Thread } from "../models/thread.model";
 import { User } from "../models/user.model";
 
 @InputType()

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {    
+  "scripts": {
     "dev": "nodemon -w src --ext ts --exec ts-node src/index.ts",
     "start": "ts-node src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -13,10 +13,15 @@
   "license": "ISC",
   "dependencies": {
     "apollo-server": "^2.23.0",
+    "apollo-server-express": "^2.23.0",
+    "body-parser": "^1.19.0",
     "class-validator": "^0.13.1",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
     "graphql": "^15.5.0",
     "pg": "^8.6.0",
     "reflect-metadata": "^0.1.13",
+    "subscriptions-transport-ws": "^0.9.18",
     "type-graphql": "^1.1.1",
     "typeorm": "^0.2.32"
   },

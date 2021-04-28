@@ -10,7 +10,7 @@ import {
   TreeChildren,
   TreeParent,
 } from "typeorm";
-import { Thread } from "./tread.model";
+import { Thread } from "./thread.model";
 import { User } from "./user.model";
 
 @Entity()

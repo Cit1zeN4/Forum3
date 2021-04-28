@@ -3,7 +3,7 @@ import { getRepository } from "typeorm";
 import { PaginationArgs } from "../inputs/common.args";
 import { AddUserInput, EditUserInput } from "../inputs/user.input";
 import { Message } from "../models/message.model";
-import { Thread } from "../models/tread.model";
+import { Thread } from "../models/thread.model";
 import { User } from "../models/user.model";
 
 @Resolver(User)
