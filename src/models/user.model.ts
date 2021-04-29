@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Message } from "./message.model";
-import { Thread } from "./tread.model";
+import { Thread } from "./thread.model";
 
 @Entity()
 @ObjectType()
