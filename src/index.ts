@@ -8,12 +8,24 @@ import { ApolloServer } from "apollo-server-express";
 import { UserResolver } from "./resolvers/user.resolver";
 import { ThreadResolver } from "./resolvers/thread.resolver";
 import { MessageResolver } from "./resolvers/message.resolver";
+import { authRouter } from "./routes/auth.router";
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 async function main() {
   const app = express();
   const ws = createServer(app);
 
-  app.use(cors());
+  app.use(
+    cors({
+      origin: ["http://localhost:8080", "https://studio.apollographql.com"],
+      optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204.
+      credentials: true,
+    })
+  );
+  app.use(cookieParser());
+  app.use(bodyParser.json());
+  app.use(authRouter());
 
   await createConnection();
 

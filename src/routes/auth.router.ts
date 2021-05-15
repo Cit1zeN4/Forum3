@@ -17,28 +17,32 @@ export function authRouter() {
     const schema = Joi.object({
       email: Joi.string().email().required(),
       password: Joi.string().required(),
-    });
+    }).required();
 
     const valid = schema.validate(req.body);
     if (valid.error) return res.status(400).json({ error: valid.error });
 
     const auth: Auth = req.body;
-    auth.password = passwordHash.generate(auth.password);
 
     const user = await User.findOne({
-      where: { email: auth.email, password: auth.password },
+      where: { email: auth.email },
     });
 
     if (!user)
-      return res
-        .status(400)
-        .json({ error: new Error("Incorrect email or password") });
+      return res.status(400).json({
+        error: `User with email: ${auth.email} doesn't exist`,
+      });
+
+    const isCorrectPassword = passwordHash.verify(auth.password, user.password);
+
+    if (!isCorrectPassword)
+      return res.status(400).json({ error: "Incorrect password" });
 
     const jwt = JWT.sign({ userId: user.id }, config.JWT_KEY, {
       expiresIn: "2d",
     });
 
-    return res.json({ jwt });
+    return res.cookie("jwt", jwt, { maxAge: 172800000 }).json({ jwt });
   });
 
   router.post("/register", async (req, res, next) => {
@@ -52,13 +56,14 @@ export function authRouter() {
     if (valid.error) return res.status(400).json({ error: valid.error });
 
     const user: User = req.body;
+    user.password = passwordHash.generate(user.password);
     const newUser = await user.save();
 
     const jwt = JWT.sign({ userId: newUser.id }, config.JWT_KEY, {
       expiresIn: "2d",
     });
 
-    return res.json({ jwt });
+    return res.cookie("jwt", jwt, { maxAge: 172800000 }).json({ jwt });
   });
 
   return router;

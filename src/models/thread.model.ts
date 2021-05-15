@@ -1,4 +1,4 @@
-import { Field, ID, Int, ObjectType } from "type-graphql";
+import { Field, ID, ObjectType } from "type-graphql";
 import {
   BaseEntity,
   Column,
@@ -6,9 +6,6 @@ import {
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
-  Tree,
-  TreeChildren,
-  TreeParent,
 } from "typeorm";
 import { Message } from "./message.model";
 import { User } from "./user.model";
@@ -37,11 +34,17 @@ export class Thread extends BaseEntity {
   parentTread?: Thread;
 
   @Field((type) => [Thread], { nullable: true })
-  @OneToMany(() => Thread, (thread) => thread.parentTread, { nullable: true })
+  @OneToMany(() => Thread, (thread) => thread.parentTread, {
+    nullable: true,
+    onDelete: "CASCADE",
+  })
   subThreads: Thread[];
 
   @Field((type) => [Message], { nullable: true })
-  @OneToMany(() => Message, (message) => message.thread, { nullable: true })
+  @OneToMany(() => Message, (message) => message.thread, {
+    nullable: true,
+    onDelete: "CASCADE",
+  })
   messages: Message[];
 
   @Field((type) => Boolean)
