@@ -16,6 +16,8 @@ import { Thread } from "../models/thread.model";
 import { User } from "../models/user.model";
 
 const NEW_THREAD = "NEW_THREAD";
+const DELETED_THREAD = "DELETED_THREAD";
+
 @Resolver(Thread)
 export class ThreadResolver {
   @Query((returns) => [Thread])
@@ -67,10 +69,24 @@ export class ThreadResolver {
     return result;
   }
 
+  @Mutation((returns) => Boolean)
+  async deleteThread(@PubSub() pubSub: PubSubEngine, @Arg("id") id: string) {
+    const result = await Thread.delete({ id });
+    const deleted = <number>result.affected;
+    return deleted > 0;
+  }
+
   @Subscription((returns) => Thread, {
     topics: NEW_THREAD,
   })
   newThread(@Root() thread: Thread) {
+    return thread;
+  }
+
+  @Subscription((returns) => Thread, {
+    topics: DELETED_THREAD,
+  })
+  deletedThread(@Root() thread: Thread) {
     return thread;
   }
 }

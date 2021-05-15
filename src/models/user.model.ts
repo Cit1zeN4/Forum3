@@ -3,7 +3,6 @@ import {
   BaseEntity,
   Column,
   Entity,
-  ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -18,30 +17,32 @@ export class User extends BaseEntity {
   id: string;
 
   @Field((type) => String)
-  @Column()
+  @Column({ unique: true })
   username: string;
 
   @Field((type) => String)
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Field((type) => String)
   @Column()
   password: string;
 
-  @Field((type) => String)
+  @Field((type) => String, { nullable: true })
   @Column({ nullable: true })
   name: string;
 
-  @Field((type) => String)
+  @Field((type) => String, { nullable: true })
   @Column({ nullable: true })
   surname: string;
 
   @Field((type) => [Thread], { nullable: true })
-  @OneToMany(() => Thread, (thread) => thread.author)
+  @OneToMany(() => Thread, (thread) => thread.author, { onDelete: "CASCADE" })
   threads: Thread[];
 
-  @Field((type) => [Message])
-  @OneToMany(() => Message, (message) => message.author)
+  @Field((type) => [Message], { nullable: true })
+  @OneToMany(() => Message, (message) => message.author, {
+    onDelete: "CASCADE",
+  })
   messages: Message[];
 }

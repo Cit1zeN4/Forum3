@@ -33,7 +33,9 @@ export class Message extends BaseEntity {
   author: User;
 
   @Field((type) => Message, { nullable: true })
-  @ManyToOne(() => Message, (message) => message.replies)
+  @ManyToOne(() => Message, (message) => message.replies, {
+    onDelete: "CASCADE",
+  })
   replyTo: Message;
 
   @Field((type) => [Message], { nullable: true })
